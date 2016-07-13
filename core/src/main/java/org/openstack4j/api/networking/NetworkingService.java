@@ -1,6 +1,7 @@
 package org.openstack4j.api.networking;
 
 import org.openstack4j.api.networking.ext.FirewallAsService;
+import org.openstack4j.api.networking.ext.LBaaSService;
 import org.openstack4j.api.networking.ext.LoadBalancerService;
 import org.openstack4j.api.networking.ext.NetQuotaService;
 import org.openstack4j.common.RestService;
@@ -55,9 +56,14 @@ public interface NetworkingService extends RestService {
     NetQuotaService quotas();
    
     /**
-     * @return the LBaaS service
+     * @return the LBaaS service 1.0
      */
     LoadBalancerService loadbalancers();
+
+    /**
+     * @return the LBaaS service 2.0
+     */
+    LBaaSService lbaas();
     
     /**
      * <p>OpenStack Firewall As a Service <code>(FwaaS) : Firewall</code> Operations API</p>

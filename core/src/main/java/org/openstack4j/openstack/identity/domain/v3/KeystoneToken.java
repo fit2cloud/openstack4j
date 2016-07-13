@@ -19,6 +19,7 @@ import com.google.common.base.Objects;
 public class KeystoneToken implements Token {
 
     private static final long serialVersionUID = 1L;
+    private String id;
 
     @JsonProperty("expires_at")
     private Date expires;
@@ -130,6 +131,11 @@ public class KeystoneToken implements Token {
     }
 
     public KeystoneToken applyContext(String endpoint, TokenAuth token) {
+        this.endpoint = endpoint;
+        return this;
+    }
+
+    public KeystoneToken applyContext(String endpoint) {
         this.endpoint = endpoint;
         return this;
     }

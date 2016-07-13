@@ -22,8 +22,11 @@ import org.openstack4j.api.types.Facing;
 import org.openstack4j.api.types.ServiceType;
 import org.openstack4j.core.transport.Config;
 import org.openstack4j.model.identity.Access;
+import org.openstack4j.model.identity.AuthVersion;
 import org.openstack4j.model.identity.Token;
 import org.openstack4j.model.identity.URLResolverParams;
+import org.openstack4j.openstack.identity.domain.v3.AccessWrapper;
+import org.openstack4j.openstack.identity.domain.v3.KeystoneToken;
 import org.openstack4j.openstack.identity.functions.ServiceToServiceType;
 import org.openstack4j.openstack.identity.internal.DefaultEndpointURLResolver;
 
@@ -44,24 +47,41 @@ public class OSClientSession implements OSClient, EndpointTokenProvider {
     EndpointURLResolver epr = new DefaultEndpointURLResolver();
     Config config;
     Access access;
+    AccessWrapper accessv3;
     Facing perspective;
     String region;
     Set<ServiceType> supports;
     CloudProvider provider;
+    AuthVersion version;
 
     private OSClientSession(Access access, String endpoint, Facing perspective, CloudProvider provider, Config config)
     {
         this.access = access;
+        this.accessv3 = null;
         this.config = config;
         this.perspective = perspective;
         this.provider = provider;
+        this.version = AuthVersion.V2;
+        sessions.set(this);
+    }
+
+    private OSClientSession(AccessWrapper accessv3, String endpoint, Facing perspective, CloudProvider provider, Config config)
+    {
+        this.access = null;
+        this.accessv3 = accessv3;
+        this.config = config;
+        this.perspective = perspective;
+        this.provider = provider;
+        this.version = AuthVersion.V3;
         sessions.set(this);
     }
 
     private OSClientSession(OSClientSession parent, String region)
     {
         this.access = parent.access;
+        this.accessv3 = parent.accessv3;
         this.perspective = parent.perspective;
+        this.version = parent.version;
         this.region = region;
     }
 
@@ -72,6 +92,12 @@ public class OSClientSession implements OSClient, EndpointTokenProvider {
     public static OSClientSession createSession(Access access, Facing perspective, CloudProvider provider, Config config) {
         return new OSClientSession(access, access.getEndpoint(), perspective, provider, config);
     }
+
+    public static OSClientSession createSession(AccessWrapper accessv3, Facing perspective, CloudProvider provider, Config config) {
+        return new OSClientSession(accessv3, accessv3.getEndpoint(), perspective, provider, config);
+    }
+
+
     
     public static OSClientSession getCurrent() {
         return sessions.get();
@@ -189,12 +215,22 @@ public class OSClientSession implements OSClient, EndpointTokenProvider {
         return access.getToken();
     }
 
+    @Override
+    public org.openstack4j.model.identity.v3.Token getTokenV3() {
+        return accessv3.getToken();
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public String getEndpoint() {
-        return access.getEndpoint();
+        if(access!=null){
+            return access.getEndpoint();
+        }else {
+            return accessv3.getEndpoint();
+        }
+
     }
 
     /**
@@ -202,10 +238,18 @@ public class OSClientSession implements OSClient, EndpointTokenProvider {
      */
     @Override
     public String getEndpoint(ServiceType service) {
-        return addNATIfApplicable(epr.findURL(URLResolverParams.create(access, service)
-                                                .resolver(config != null ? config.getV2Resolver() : null)
-                                                .perspective(perspective)
-                                                .region(region)));
+        if(access!=null) {
+            return addNATIfApplicable(epr.findURL(URLResolverParams.create(access, service)
+                    .resolver(config != null ? config.getV2Resolver() : null)
+                    .perspective(perspective)
+                    .region(region)));
+        }else{
+            return addNATIfApplicable(epr.findURL(URLResolverParams.create(accessv3, service)
+                    .resolver(config != null ? config.getV2Resolver() : null)
+                    .perspective(perspective)
+                    .region(region)));
+        }
+
     }
     
     private String addNATIfApplicable(String url) {
@@ -233,7 +277,11 @@ public class OSClientSession implements OSClient, EndpointTokenProvider {
      */
     @Override
     public String getTokenId() {
-        return getToken().getId();
+        if(version.equals(AuthVersion.V2)){
+            return getToken().getId();
+        }else {
+            return accessv3.getId();
+        }
     }
 
     /**
@@ -276,6 +324,12 @@ public class OSClientSession implements OSClient, EndpointTokenProvider {
         return access;
     }
 
+    @Override
+    public AccessWrapper getAccessV3() {
+        return accessv3;
+    }
+
+
     /**
      * {@inheritDoc}
      */
@@ -314,6 +368,11 @@ public class OSClientSession implements OSClient, EndpointTokenProvider {
     @Override
     public SaharaService sahara() {
         return Apis.getSaharaServices();
+    }
+
+    @Override
+    public AuthVersion getVersion() {
+        return this.version;
     }
 
     @Override

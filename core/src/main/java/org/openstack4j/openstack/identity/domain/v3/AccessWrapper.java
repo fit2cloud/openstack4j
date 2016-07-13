@@ -7,14 +7,12 @@ import java.util.List;
 
 import org.openstack4j.api.types.ServiceType;
 import org.openstack4j.model.common.Link;
-import org.openstack4j.model.identity.Access;
-import org.openstack4j.model.identity.AuthVersion;
-import org.openstack4j.model.identity.Endpoint;
-import org.openstack4j.model.identity.Role;
-import org.openstack4j.model.identity.Tenant;
-import org.openstack4j.model.identity.TokenV2;
-import org.openstack4j.model.identity.v3.Catalog;
-import org.openstack4j.model.identity.v3.Project;
+import org.openstack4j.model.identity.*;
+import org.openstack4j.model.identity.v3.Endpoint;
+import org.openstack4j.model.identity.v3.Role;
+import org.openstack4j.model.identity.v3.*;
+import org.openstack4j.model.identity.v3.Access;
+import org.openstack4j.model.identity.v3.Token;
 import org.openstack4j.model.identity.v3.User;
 import org.openstack4j.openstack.identity.domain.KeystoneTenant;
 import org.openstack4j.openstack.identity.functions.ServiceFunctions;
@@ -62,18 +60,20 @@ public class AccessWrapper implements Access {
      * {@inheritDoc}
      */
     @Override
-    public org.openstack4j.model.identity.Token getToken() {
-        Project project = KeystoneProject.builder()
-                .id(token.getProject().getId())
-                .name(token.getProject().getName())
-                .build();
-        Tenant tenant = KeystoneTenant.builder()
-                .id(project.getId())
-                .name(project.getName())
-                .description(project.getDescription())
-                .enabled(project.isEnabled())
-                .build();
-        return new V2Token(id, token.getExpires(), token.getVersion(), tenant);
+    public Token getToken() {
+        return this.token;
+//        Project project = KeystoneProject.builder()
+//                .id(token.getProject().getId())
+//                .name(token.getProject().getName())
+//                .build();
+//        Tenant tenant = KeystoneTenant.builder()
+//                .id(project.getId())
+//                .name(project.getName())
+//                .description(project.getDescription())
+//                .enabled(project.isEnabled())
+//                .build();
+//
+//        return new V3Token(id, token.getExpires(), token.getVersion(), tenant,token.getCatalog());
     }
 
     /**
@@ -159,7 +159,7 @@ public class AccessWrapper implements Access {
 
         @Override
         public List<? extends Endpoint> getEndpoints() {
-            return Collections.emptyList();
+            return catalog.getEndpoints();
         }
 
         @Override
@@ -219,25 +219,27 @@ public class AccessWrapper implements Access {
 
     }
 
-    private class V2Token implements TokenV2 {
+    private class V3Token implements Token {
 
         private static final long serialVersionUID = 1L;
         private String id;
         private Date expires;
         private AuthVersion version;
         private Tenant tenant;
+        private List<? extends Catalog> catalog;
 
-        public V2Token(String id, Date expires, AuthVersion version, Tenant tenant) {
+        public V3Token(String id,Date expires, AuthVersion version, Tenant tenant,List<? extends Catalog> catalog) {
             super();
             this.id = id;
             this.expires = expires;
             this.version = version;
             this.tenant = tenant;
+            this.catalog = catalog;
         }
 
         @Override
-        public String getId() {
-            return id;
+        public List<? extends Catalog> getCatalog() {
+            return null;
         }
 
         @Override
@@ -246,13 +248,53 @@ public class AccessWrapper implements Access {
         }
 
         @Override
-        public AuthVersion getVersion() {
-            return version;
+        public Date getIssuedAt() {
+            return null;
         }
 
         @Override
-        public Tenant getTenant() {
-            return tenant;
+        public Project getProject() {
+            return null;
+        }
+
+        @Override
+        public Domain getDomain() {
+            return null;
+        }
+
+        @Override
+        public User getUser() {
+            return null;
+        }
+
+        @Override
+        public AuthStore getCredentials() {
+            return null;
+        }
+
+        @Override
+        public String getEndpoint() {
+            return null;
+        }
+
+        @Override
+        public List<? extends org.openstack4j.model.identity.v3.Role> getRoles() {
+            return null;
+        }
+
+        @Override
+        public List<String> getAuditIds() {
+            return null;
+        }
+
+        @Override
+        public List<String> getMethods() {
+            return null;
+        }
+
+        @Override
+        public AuthVersion getVersion() {
+            return version;
         }
 
     }
@@ -260,6 +302,6 @@ public class AccessWrapper implements Access {
     @JsonIgnore
     @Override
     public String getCacheIdentifier() {
-        return getEndpoint() + getToken().getId();
+        return getEndpoint() + getToken().getAuditIds().get(0);
     }
 }

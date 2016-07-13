@@ -34,7 +34,7 @@ LbPoolService {
      */
     @Override
     public List<? extends LbPool> list() {
-        return get(LbPools.class, uri("/lb/pools")).execute().getList();
+        return get(LbPools.class, uri("/v2.0/lbaas/pools")).execute().getList();
     }
 
     /**
@@ -42,7 +42,7 @@ LbPoolService {
      */
     @Override
     public List<? extends LbPool> list(Map<String, String> filteringParams) {
-        Invocation<LbPools> req = get(LbPools.class, uri("/lb/pools"));
+        Invocation<LbPools> req = get(LbPools.class, uri("/v2.0/lbaas/pools"));
         if (filteringParams != null) {
             for (Map.Entry<String, String> entry : filteringParams.entrySet()) {
                 req = req.param(entry.getKey(), entry.getValue());
@@ -57,7 +57,7 @@ LbPoolService {
     @Override
     public LbPool get(String lbPoolId) {
         checkNotNull(lbPoolId);
-        return get(NeutronLbPool.class, uri("/lb/pools/%s",lbPoolId)).execute();
+        return get(NeutronLbPool.class, uri("/v2.0/lbaas/pools/%s",lbPoolId)).execute();
     }
 
     /**
@@ -67,7 +67,7 @@ LbPoolService {
     public ActionResponse delete(String lbPoolId) {
         checkNotNull(lbPoolId);
         return ToActionResponseFunction.INSTANCE.apply(delete(void.class,
-                uri("/lb/pools/%s", lbPoolId)).executeWithResponse());
+                uri("/v2.0/lbaas/pools/%s", lbPoolId)).executeWithResponse());
     }
 
     /**
@@ -76,7 +76,7 @@ LbPoolService {
     @Override
     public LbPool create(LbPool lbPool) {
         checkNotNull(lbPool);
-        return post(NeutronLbPool.class,uri("/lb/pools")).entity(lbPool).execute();
+        return post(NeutronLbPool.class,uri("/v2.0/lbaas/pools")).entity(lbPool).execute();
     }
 
     /**
@@ -86,7 +86,7 @@ LbPoolService {
     public LbPool update(String lbPoolId, LbPoolUpdate lbPool) {
         checkNotNull(lbPoolId);
         checkNotNull(lbPool);
-        return put(NeutronLbPool.class, uri("/lb/pools/%s", lbPoolId)).entity(
+        return put(NeutronLbPool.class, uri("/v2.0/lbaas/pools/%s", lbPoolId)).entity(
                 lbPool).execute();
     }
 
@@ -96,7 +96,7 @@ LbPoolService {
     @Override
     public LbPoolStats stats(String lbPoolId) {
         checkNotNull(lbPoolId);
-        return get(NeutronLbPoolStats.class, uri("/lb/pools/%s/stats.json",lbPoolId)).execute();
+        return get(NeutronLbPoolStats.class, uri("/v2.0/lbaas/pools/%s/stats.json",lbPoolId)).execute();
     }
 
     /**

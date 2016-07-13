@@ -179,14 +179,14 @@ public class OSAuthenticator {
 //        }
         else {
         	//TODO v3 TokenAuth or via warpper
-        	token = token.applyContext(	info.endpoint, new TokenAuth(accesswr.getToken().getId(), auth.getScope().getProject().getName(), auth.getScope().getProject().getId()));
+        	token = token.applyContext(info.endpoint);
         }
         
         if (!info.reLinkToExistingSession)
             return OSClientSession.createSession(accesswr, info.perspective, info.provider, config);
         
         OSClientSession current = OSClientSession.getCurrent();
-        current.access = accesswr;
+        current.accessv3 = accesswr;
         return current;
         
     }

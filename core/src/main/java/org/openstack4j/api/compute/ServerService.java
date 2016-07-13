@@ -214,7 +214,16 @@ public interface ServerService {
      * @return volumeAttachment or null if not applicable
      */
     VolumeAttachment attachVolume(String serverId, String volumeId, String device);
-    
+
+    /**
+     * attach the volume  to the given server
+     *
+     * @param serverId the server identifier
+     * @param attachmentId the attachment identifier
+     * @return volumeAttachment or null if not applicable
+     */
+    VolumeAttachment getAttachment(String serverId, String attachmentId);
+
     /**
      * Changes the admin/root password on the server
      * 

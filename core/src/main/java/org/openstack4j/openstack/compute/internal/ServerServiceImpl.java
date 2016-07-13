@@ -303,6 +303,16 @@ public class ServerServiceImpl extends BaseComputeServices implements ServerServ
      * {@inheritDoc}
      */
     @Override
+    public VolumeAttachment getAttachment(String serverId, String attachmentId) {
+        checkNotNull(serverId);
+        checkNotNull(attachmentId);
+        return get(NovaVolumeAttachment.class, uri("/servers/%s/os-volume_attachments/%s", serverId, attachmentId)).execute();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public ActionResponse detachVolume(String serverId, String attachmentId) {
         return ToActionResponseFunction.INSTANCE.apply(
                    delete(Void.class,uri("/servers/%s/os-volume_attachments/%s", serverId, attachmentId)).executeWithResponse()

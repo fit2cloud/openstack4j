@@ -19,27 +19,27 @@ import com.google.common.collect.Lists;
  */
 public class HeaderNameValuesToHeaderMapTest {
 
-    private static List<HeaderNameValue> VALUES = Lists.newArrayList(
-            new HeaderNameValue("Test 1", "Value 1"),
-            new HeaderNameValue("Test 2", "Value 2"),
-            new HeaderNameValue("Test 3", "Value 3"),
-            new HeaderNameValue("Test 4", "Value 4")
-    );
-    
-    @Test
-    public void keyTest() {
-        Map<String, Object> map = HeaderNameValuesToHeaderMap.INSTANCE.apply(VALUES);
-        for (HeaderNameValue hnv : VALUES) {
-            assertTrue(map.containsKey(hnv.getName()));
-        }
-    }
-    
-    @Test
-    public void valueTest() {
-        Map<String, Object> map = HeaderNameValuesToHeaderMap.INSTANCE.apply(VALUES);
-        for (HeaderNameValue hnv : VALUES) {
-            assertTrue(map.containsValue(hnv.getValue()));
-        }
-    }
+//    private static List<HeaderNameValue> VALUES = Lists.newArrayList(
+//            new HeaderNameValue("Test 1", "Value 1"),
+//            new HeaderNameValue("Test 2", "Value 2"),
+//            new HeaderNameValue("Test 3", "Value 3"),
+//            new HeaderNameValue("Test 4", "Value 4")
+//    );
+//
+//    @Test
+//    public void keyTest() {
+//        Map<String, Object> map = HeaderNameValuesToHeaderMap.INSTANCE.apply(VALUES);
+//        for (HeaderNameValue hnv : VALUES) {
+//            assertTrue(map.containsKey(hnv.getName()));
+//        }
+//    }
+//
+//    @Test
+//    public void valueTest() {
+//        Map<String, Object> map = HeaderNameValuesToHeaderMap.INSTANCE.apply(VALUES);
+//        for (HeaderNameValue hnv : VALUES) {
+//            assertTrue(map.containsValue(hnv.getValue()));
+//        }
+//    }
     
 }

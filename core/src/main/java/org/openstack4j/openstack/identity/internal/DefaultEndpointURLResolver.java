@@ -36,16 +36,30 @@ public class DefaultEndpointURLResolver implements EndpointURLResolver {
     @Override
     public String findURL(URLResolverParams p) {
 
-        if (p.type == null)
-            return p.access.getEndpoint();
-        Key key = Key.of(p.access.getCacheIdentifier(), p.type, p.perspective, p.region);
+        if (p.type == null){
+            if(p.getVersion().equals(AuthVersion.V2)){
+                return p.access.getEndpoint();
+            }else{
+                return p.accessv3.getEndpoint();
+            }
+        }
+        Key key = null;
+        String endpoint = null;
+        if(p.getVersion().equals(AuthVersion.V2)){
+            key = Key.of(p.access.getCacheIdentifier(), p.type, p.perspective, p.region);
+            endpoint = p.access.getEndpoint();
+        }else {
+            key = Key.of(p.accessv3.getCacheIdentifier(), p.type, p.perspective, p.region);
+            endpoint = p.accessv3.getEndpoint();
+
+        }
+
 
         String url = CACHE.get(key);
 
         if (url != null)
             return url;
-
-        switch (p.access.getVersion()) {
+        switch (p.getVersion()) {
         case V3:
             url = resolveV3(p);
             break;
@@ -56,7 +70,7 @@ public class DefaultEndpointURLResolver implements EndpointURLResolver {
 
         if (url != null)
         {
-            if (p.access.getVersion() == AuthVersion.V3) {
+            if (p.getVersion() == AuthVersion.V3) {
                 CACHE.put(key, url);
             }
             return url;
@@ -64,7 +78,8 @@ public class DefaultEndpointURLResolver implements EndpointURLResolver {
         else if (p.region != null)
             throw RegionEndpointNotFoundException.create(p.region, p.type.getServiceName());
 
-        return p.access.getEndpoint();
+
+        return endpoint;
     }
 
     private String resolveV2(URLResolverParams p) {
@@ -106,7 +121,7 @@ public class DefaultEndpointURLResolver implements EndpointURLResolver {
     }
 
     private String resolveV3(URLResolverParams p) {
-        Token token = p.access.unwrap();
+        Token token = p.accessv3.unwrap();
         if (p.perspective == null)
             p.perspective = Facing.PUBLIC;
 

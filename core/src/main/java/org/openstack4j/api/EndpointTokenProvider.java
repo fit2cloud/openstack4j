@@ -23,4 +23,5 @@ public interface EndpointTokenProvider {
 	 * @return the auth token identifier
 	 */
 	String getTokenId();
+
 }

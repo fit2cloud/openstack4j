@@ -14,7 +14,10 @@ import org.openstack4j.api.telemetry.TelemetryService;
 import org.openstack4j.api.types.Facing;
 import org.openstack4j.api.types.ServiceType;
 import org.openstack4j.model.identity.Access;
+import org.openstack4j.model.identity.AuthVersion;
 import org.openstack4j.model.identity.Token;
+import org.openstack4j.openstack.identity.domain.v3.AccessWrapper;
+import org.openstack4j.openstack.identity.domain.v3.KeystoneToken;
 
 /**
  * A client which has been identified.  Any calls spawned from this session will automatically utilize the original authentication that was
@@ -118,6 +121,13 @@ public interface OSClient {
 	 * @return the authentication token
 	 */
 	Token getToken();
+
+	/**
+	 * Gets the v3 token that was assigned during authorization
+	 *
+	 * @return the authentication token
+	 */
+	org.openstack4j.model.identity.v3.Token getTokenV3();
 	
 	/**
 	 * Gets the current endpoint of the Identity service
@@ -176,9 +186,14 @@ public interface OSClient {
 	TelemetryService telemetry();
 
 	/**
-	 * @return the authorized access entity which contains the authorized token, user details and service catalog
+	 * @return the authorized v2 access entity which contains the authorized token, user details and service catalog
 	 */
 	Access getAccess();
+
+	/**
+	 * @return the authorized v3 access entity which contains the authorized token, user details and service catalog
+	 */
+	AccessWrapper getAccessV3();
 	
 	/**
 	 * Returns the Heat Service API
@@ -193,5 +208,12 @@ public interface OSClient {
 	 * @return the Sahara service
 	 */
 	SaharaService sahara();
+
+	/**
+	 * Returns the KeyStone version,to specify v2 or v3
+	 *
+	 * @return the Sahara service
+	 */
+	AuthVersion getVersion();
 	
 }

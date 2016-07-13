@@ -32,22 +32,7 @@ import org.openstack4j.model.network.builder.NetworkUpdateBuilder;
 import org.openstack4j.model.network.builder.PortBuilder;
 import org.openstack4j.model.network.builder.RouterBuilder;
 import org.openstack4j.model.network.builder.SubnetBuilder;
-import org.openstack4j.model.network.ext.builder.FirewallBuilder;
-import org.openstack4j.model.network.ext.builder.FirewallPolicyBuilder;
-import org.openstack4j.model.network.ext.builder.FirewallPolicyUpdateBuilder;
-import org.openstack4j.model.network.ext.builder.FirewallRuleBuilder;
-import org.openstack4j.model.network.ext.builder.FirewallRuleUpdateBuilder;
-import org.openstack4j.model.network.ext.builder.FirewallUpdateBuilder;
-import org.openstack4j.model.network.ext.builder.HealthMonitorAssociateBuilder;
-import org.openstack4j.model.network.ext.builder.HealthMonitorBuilder;
-import org.openstack4j.model.network.ext.builder.HealthMonitorUpdateBuilder;
-import org.openstack4j.model.network.ext.builder.LbPoolBuilder;
-import org.openstack4j.model.network.ext.builder.LbPoolUpdateBuilder;
-import org.openstack4j.model.network.ext.builder.MemberBuilder;
-import org.openstack4j.model.network.ext.builder.MemberUpdateBuilder;
-import org.openstack4j.model.network.ext.builder.SessionPersistenceBuilder;
-import org.openstack4j.model.network.ext.builder.VipBuilder;
-import org.openstack4j.model.network.ext.builder.VipUpdateBuilder;
+import org.openstack4j.model.network.ext.builder.*;
 import org.openstack4j.model.sahara.builder.ClusterBuilder;
 import org.openstack4j.model.sahara.builder.ClusterTemplateBuilder;
 import org.openstack4j.model.sahara.builder.DataSourceBuilder;
@@ -90,22 +75,7 @@ import org.openstack4j.openstack.networking.domain.NeutronRouter;
 import org.openstack4j.openstack.networking.domain.NeutronSecurityGroup;
 import org.openstack4j.openstack.networking.domain.NeutronSecurityGroupRule;
 import org.openstack4j.openstack.networking.domain.NeutronSubnet;
-import org.openstack4j.openstack.networking.domain.ext.NeutronFirewall;
-import org.openstack4j.openstack.networking.domain.ext.NeutronFirewallPolicy;
-import org.openstack4j.openstack.networking.domain.ext.NeutronFirewallPolicyUpdate;
-import org.openstack4j.openstack.networking.domain.ext.NeutronFirewallRule;
-import org.openstack4j.openstack.networking.domain.ext.NeutronFirewallRuleUpdate;
-import org.openstack4j.openstack.networking.domain.ext.NeutronFirewallUpdate;
-import org.openstack4j.openstack.networking.domain.ext.NeutronHealthMonitor;
-import org.openstack4j.openstack.networking.domain.ext.NeutronHealthMonitorAssociate;
-import org.openstack4j.openstack.networking.domain.ext.NeutronHealthMonitorUpdate;
-import org.openstack4j.openstack.networking.domain.ext.NeutronLbPool;
-import org.openstack4j.openstack.networking.domain.ext.NeutronLbPoolUpdate;
-import org.openstack4j.openstack.networking.domain.ext.NeutronMember;
-import org.openstack4j.openstack.networking.domain.ext.NeutronMemberUpdate;
-import org.openstack4j.openstack.networking.domain.ext.NeutronSessionPersistence;
-import org.openstack4j.openstack.networking.domain.ext.NeutronVip;
-import org.openstack4j.openstack.networking.domain.ext.NeutronVipUpdate;
+import org.openstack4j.openstack.networking.domain.ext.*;
 import org.openstack4j.openstack.sahara.domain.SaharaCluster;
 import org.openstack4j.openstack.sahara.domain.SaharaClusterTemplate;
 import org.openstack4j.openstack.sahara.domain.SaharaDataSource;
@@ -478,7 +448,71 @@ public class Builders {
     public static LbPoolUpdateBuilder lbPoolUpdate(){
     	return NeutronLbPoolUpdate.builder();
     }
-    
+
+    /**
+     * The builder to create a loadBalancer
+     * @return LbLoadBalancerV2Builder
+     */
+    public static LbLoadBalancerV2Builder lbLoadBalancerV2(){
+        return NeutronLbLoadBalancerV2.builder();
+    }
+
+    /**
+     * The builder to create a loadBalancer
+     * @return LbLoadBalancerV2UpdateBuilder
+     */
+    public static LbLoadBalancerV2UpdateBuilder lbLoadBalancerV2Update(){
+        return NeutronLbLoadBalancerV2Update.builder();
+    }
+
+    /**
+     * The builder to create a loadBalancer listener
+     * @return LbListenerV2Builder
+     */
+    public static LbListenerV2Builder lbListenerV2(){
+        return NeutronLbListenerV2.builder();
+    }
+
+    /**
+     * The builder to create a lbListener updater
+     * @return LbListenerV2UpdateBuilder
+     */
+    public static LbListenerV2UpdateBuilder lbListenerV2Update(){
+        return NeutronLbListenerV2Update.builder();
+    }
+
+    /**
+     * The builder to create a lbPool
+     * @return LbListenerV2Builder
+     */
+    public static LbPoolV2Builder lbPoolV2(){
+        return NeutronLbPoolV2.builder();
+    }
+
+    /**
+     * The builder to create a lbPool updater
+     * @return LbPoolV2UpdateBuilder
+     */
+    public static LbPoolV2UpdateBuilder lbPoolV2Update(){
+        return NeutronLbPoolV2Update.builder();
+    }
+
+    /**
+     * The builder to create a lbMember
+     * @return LbListenerV2Builder
+     */
+    public static LbMemberV2Builder lbMemberV2(){
+        return NeutronLbMemberV2.builder();
+    }
+
+    /**
+     * The builder to create a lbMember updater
+     * @return LbPoolV2UpdateBuilder
+     */
+    public static LbMemberV2UpdateBuilder lbMemberV2Update(){
+        return NeutronLbMemberV2Update.builder();
+    }
+
     /**
      * The builder to create a lbPool
      * @return HealthMonitorAssociateBuilder
