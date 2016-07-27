@@ -11,8 +11,6 @@ import org.openstack4j.model.ModelEntity;
  */
 public interface Hypervisor extends ModelEntity {
 	
-	String getHypervisorType();
-	
 	String getHypervisorVersion();
 	
 	/**

@@ -19,8 +19,6 @@ public class ExtHypervisor implements Hypervisor {
 
     @JsonProperty("hypervisor_version")
     private String hypervisorVersion;
-    @JsonProperty("hypervisor_type")
-    private String hypervisorType;
     @JsonProperty("current_workload")
     private int currentWorkload;
     @JsonProperty("disk_available_least")
@@ -155,7 +153,7 @@ public class ExtHypervisor implements Hypervisor {
                 .add("vcpus", virtualCPU).add("usedVcpu", virtualUsedCPU).add("localDisk", localDisk).add("localDiskUsed", localDiskUsed)
                 .add("localMemory", localMemory).add("localMemoryUsed", localMemoryUsed).add("currentWorkload",currentWorkload)
                 .add("leastDiskAvail", leastDiskAvailable).add("running_vms", runningVM).add("service", service)
-                .add("cpuInfo", cpuInfo).add("hypervisorType", hypervisorType).add("hypervisorVersion", hypervisorVersion)
+                .add("cpuInfo", cpuInfo).add("hypervisorVersion", hypervisorVersion)
                 .toString();
     }
 
@@ -289,10 +287,6 @@ public class ExtHypervisor implements Hypervisor {
         }
     }
 
-    @Override
-	public String getHypervisorType() {
-    	return hypervisorType;
-	}
 
 	@Override
 	public String getHypervisorVersion() {
